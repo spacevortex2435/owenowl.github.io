@@ -1,3 +1,3 @@
-# 502 Bad Gateway
+### OwenOwl.net 维护中，预计维护时间 $10^9\ \mathrm{h}$。
 
-nginx 
+太无聊了？[来局对战](generals.io)！
