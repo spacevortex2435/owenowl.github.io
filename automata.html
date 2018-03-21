@@ -6,9 +6,8 @@
 		<div style="position:fixed;opacity:0.7;left:-1000px;top:-1000px;border:1px solid black;pointer-events:none" id="cursor"></div>
 		<div style="overflow:hidden;width:100%;height:100%">
 			<div style="height:100px">
-				Options: <button id="nxt">Next</button><button id="rnd">Refill Randomly</button><button id="rst">Reset</button><button id="bck">Go Back To Main Page</button><br>
-				Speed: <input value = "unusable now" id="a"/><button id="ctn">Continue Runing</button><button id="stp">Pause</button><br>
-				Patterns: <button id="gld">Glider</button><button id="pls">Pulsar</button><button id="lss">Light spaceship</button><br>
+				Options: <button id="nxt">Next</button><button id="rnd">Random Fill</button><button id="rst">Reset</button><button id="ctn">Play</button><button id="stp">Pause</button><button id="bck">Exit</button><br>
+				Patterns: <button id="gld">Glider</button><button id="pls">Pulsar</button><button id="lss">Light Spaceship</button><button id="glg">Glider Gun</button><br>
 				Click to flip a block
 			</div>
 			<div><canvas width="600px" height="600px" style="height:600px;width:600px" id="board"></canvas></div>
@@ -167,6 +166,56 @@
 				cell.draw();
 			}
 
+			function drawGGun() {
+				resetFill();
+				cell.alive[3][8] = 1;
+				cell.alive[3][9] = 1;
+				cell.alive[4][8] = 1;
+				cell.alive[4][9] = 1;
+				cell.alive[14][5] = 1;
+				cell.alive[14][6] = 1;
+				cell.alive[14][10] = 1;
+				cell.alive[14][11] = 1;
+				cell.alive[16][6] = 1;
+				cell.alive[16][10] = 1;
+				cell.alive[17][7] = 1;
+				cell.alive[17][8] = 1;
+				cell.alive[17][9] = 1;
+				cell.alive[18][7] = 1;
+				cell.alive[18][8] = 1;
+				cell.alive[18][9] = 1;
+				cell.alive[24][6] = 1;
+				cell.alive[25][5] = 1;
+				cell.alive[25][6] = 1;
+				cell.alive[25][7] = 1;
+				cell.alive[26][5] = 1;
+				cell.alive[26][6] = 1;
+				cell.alive[26][7] = 1;
+				cell.alive[28][3] = 1;
+				cell.alive[28][4] = 1;
+				cell.alive[28][8] = 1;
+				cell.alive[28][9] = 1;
+				cell.alive[29][3] = 1;
+				cell.alive[29][4] = 1;
+				cell.alive[29][8] = 1;
+				cell.alive[29][9] = 1;
+				cell.alive[32][6] = 1;
+				cell.alive[33][5] = 1;
+				cell.alive[33][7] = 1;
+				cell.alive[34][4] = 1;
+				cell.alive[34][5] = 1;
+				cell.alive[35][4] = 1;
+				cell.alive[35][5] = 1;
+				cell.alive[36][4] = 1;
+				cell.alive[36][5] = 1;
+				cell.alive[36][6] = 1;
+				cell.alive[37][5] = 1;
+				cell.alive[37][7] = 1;
+				cell.alive[38][6] = 1;
+				cell.alive[38][7] = 1;
+				cell.draw();
+			}
+
 			document.getElementById("nxt").onclick=nextRunning;
 			document.getElementById("rnd").onclick=randomFill;
 			document.getElementById("rst").onclick=resetFill;;
@@ -178,6 +227,7 @@
 			document.getElementById("gld").onclick=drawGlider;
 			document.getElementById("pls").onclick=drawPulsar;
 			document.getElementById("lss").onclick=drawLSpaceship;
+			document.getElementById("glg").onclick=drawGGun;
 
 			board_dom.onmousedown=function(ev) {
 				var X = ev.offsetX;
