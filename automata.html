@@ -6,7 +6,8 @@
 		<div style="position:fixed;opacity:0.7;left:-1000px;top:-1000px;border:1px solid black;pointer-events:none" id="cursor"></div>
 		<div style="overflow:hidden;width:100%;height:100%">
 			<div style="height:100px">
-				Options: <button id="nxt">Next</button><button id="rnd">Refill Randomly</button><button id="rst">Reset</button><button id="ctn">Continue Runing</button><button id="stp">Pause</button><button id="bck">Go Back To Main Page</button><br>
+				Options: <button id="nxt">Next</button><button id="rnd">Refill Randomly</button><button id="rst">Reset</button><button id="bck">Go Back To Main Page</button><br>
+				Speed: <input value = "unusable now" id="a"/><button id="ctn">Continue Runing</button><button id="stp">Pause</button><br>
 				Patterns: <button id="gld">Glider</button><button id="pls">Pulsar</button><button id="lss">Light spaceship</button><br>
 				Click to flip a block
 			</div>
@@ -179,7 +180,6 @@
 			document.getElementById("lss").onclick=drawLSpaceship;
 
 			board_dom.onmousedown=function(ev) {
-				stopRunning();
 				var X = ev.offsetX;
 				var Y = ev.offsetY;
 				var rX = Math.floor(X / 10);
