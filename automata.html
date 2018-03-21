@@ -13,7 +13,7 @@
 			<div><canvas width="600px" height="600px" style="height:600px;width:600px" id="board"></canvas></div>
 		</div>
 		<script>
-			var W = 60, ctnRun;
+			var W = 55, ctnRun;
 			board_dom=document.getElementById("board");
 			board=board_dom.getContext("2d");
 
@@ -30,10 +30,10 @@
 			cellObj.prototype.draw=function() {
 				for (var i = 0; i < W; i++) {
 					for (var j = 0; j < W; j++) {
-						if(this.alive[i][j]==1) {
+						if (this.alive[i][j] == 1) {
 							board.fillStyle = "black";
 							board.fillRect (i * 10, j * 10, 10, 10);
-							}else{
+							} else {
 							board.fillStyle = "white";
 							board.fillRect (i * 10, j * 10, 10, 10);
 						}
@@ -53,8 +53,8 @@
 			}
 
 			cellObj.prototype.initS=function() {
-				for (var i = 1; i < W - 1; i++) {
-					for (var j = 1; j < W - 1; j++) {
+				for (var i = 0; i < W; i++) {
+					for (var j = 0; j < W; j++) {
 						this.alive[i][j] = 0;
 					}
 				}
@@ -62,11 +62,18 @@
 
 			cellObj.prototype.nextStep=function() {
 				var ncell = new cellObj();
+				ncell.initS();
+				for (var j = 0; j < W - 1; j++) {
+					this.alive[0][j] = this.alive[W - 1][j] = 0;
+					this.alive[j][0] = this.alive[j][W - 1] = 0;
+				}
 				for (var i = 1; i < W - 1; i++) {
 					for (var j = 1; j < W - 1; j++) {
 						var sum = 0;
 						sum = this.alive[i][j - 1] + this.alive[i][j + 1] + this.alive[i - 1][j] + this.alive[i + 1][j] + this.alive[i - 1][j - 1] + this.alive[i - 1][j + 1] + this.alive[i + 1][j - 1] + this.alive[i + 1][j + 1];
-						ncell.alive[i][j] = (sum == 3) | (sum == 2 & this.alive[i][j]);
+						if ((sum == 3) || ((sum == 2) && this.alive[i][j])) {
+							ncell.alive[i][j] = 1;
+						}
 					}
 				}
 				for (var i = 0; i < W; i++) {
