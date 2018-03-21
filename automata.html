@@ -1,0 +1,196 @@
+
+<html><head>
+		<title>AM</title>
+		<meta name="viewport" content="width=device-width,height=device-height">
+		</head><body>
+		<div style="position:fixed;opacity:0.7;left:-1000px;top:-1000px;border:1px solid black;pointer-events:none" id="cursor"></div>
+		<div style="overflow:hidden;width:100%;height:100%">
+			<div style="height:100px">
+				Options: <button id="nxt">Next</button><button id="rnd">Refill Randomly</button><button id="rst">Reset</button><button id="ctn">Continue Runing</button><button id="stp">Pause</button><button id="bck">Go Back To Main Page</button><br>
+				Patterns: <button id="gld">Glider</button><button id="pls">Pulsar</button><button id="lss">Light spaceship</button><br>
+				Click to flip a block
+			</div>
+			<div><canvas width="600px" height="600px" style="height:600px;width:600px" id="board"></canvas></div>
+		</div>
+		<script>
+			var W = 60, ctnRun;
+			board_dom=document.getElementById("board");
+			board=board_dom.getContext("2d");
+
+			var cellObj = function() {
+				this.alive = [];
+				for (var i = 0; i < W; i++) {
+					this.alive[i] = [];
+					for (var j = 0; j < W; j++) {
+						this.alive[i][j] = 0;
+					}
+				}
+			}
+
+			cellObj.prototype.draw=function() {
+				for (var i = 0; i < W; i++) {
+					for (var j = 0; j < W; j++) {
+						if(this.alive[i][j]==1) {
+							board.fillStyle = "black";
+							board.fillRect (i * 10, j * 10, 10, 10);
+							}else{
+							board.fillStyle = "white";
+							board.fillRect (i * 10, j * 10, 10, 10);
+						}
+					}
+				}
+			}
+
+			cellObj.prototype.initR=function() {
+				for (var i = 1; i < W - 1; i++) {
+					for (var j = 1; j < W - 1; j++) {
+						this.alive[i][j] = 0;
+						if(Math.random() < 0.2) {
+							this.alive[i][j] = 1;
+						}
+					}
+				}
+			}
+
+			cellObj.prototype.initS=function() {
+				for (var i = 1; i < W - 1; i++) {
+					for (var j = 1; j < W - 1; j++) {
+						this.alive[i][j] = 0;
+					}
+				}
+			}
+
+			cellObj.prototype.nextStep=function() {
+				var ncell = new cellObj();
+				for (var i = 1; i < W - 1; i++) {
+					for (var j = 1; j < W - 1; j++) {
+						var sum = 0;
+						sum = this.alive[i][j - 1] + this.alive[i][j + 1] + this.alive[i - 1][j] + this.alive[i + 1][j] + this.alive[i - 1][j - 1] + this.alive[i - 1][j + 1] + this.alive[i + 1][j - 1] + this.alive[i + 1][j + 1];
+						ncell.alive[i][j] = (sum == 3) | (sum == 2 & this.alive[i][j]);
+					}
+				}
+				for (var i = 0; i < W; i++) {
+					for (var j = 0; j < W; j++) {
+						this.alive[i][j] = ncell.alive[i][j];
+					}
+				}
+			}
+
+			var cell = new cellObj();
+			cell.initR();
+			cell.draw();
+
+			var runningOn = 0;
+
+			function continueRunning() {
+				if (runningOn == 0) {
+					ctnRun = setInterval(nextFrame, 100);
+					runningOn = 1;
+				}
+			}
+
+			function stopRunning() {
+				clearInterval(ctnRun);
+				runningOn = 0;
+			}
+
+			function nextFrame() {
+				cell.nextStep();
+				cell.draw();
+			}
+
+			function nextRunning() {
+				stopRunning();
+				nextFrame();
+			}
+
+			function randomFill() {
+				stopRunning();
+				cell.initR();
+				cell.draw();
+			}
+
+			function resetFill() {
+				stopRunning();
+				cell.initS();
+				cell.draw();
+			}
+
+			function drawGlider() {
+				resetFill();
+				cell.alive[1][2] = 1;
+				cell.alive[2][3] = 1;
+				cell.alive[3][1] = 1;
+				cell.alive[3][2] = 1;
+				cell.alive[3][3] = 1;
+				cell.draw();
+			}
+
+			var mid = W / 2, dx, dy;
+			function drawPulsarStep(Px, Py) {
+				cell.alive[mid + Px * dx][mid + Py * dy] = 1;
+				cell.alive[mid + Py * dy][mid + Px * dx] = 1;
+			}
+			function drawPulsar() {
+				resetFill();
+				for (dx = -1; dx <= 1; dx = dx + 2) {
+					for (dy = -1; dy <= 1; dy = dy + 2){
+						drawPulsarStep(1, 2);
+						drawPulsarStep(1, 3);
+						drawPulsarStep(1, 4);
+						drawPulsarStep(2, 3);
+						drawPulsarStep(2, 5);
+						drawPulsarStep(3, 4);
+						drawPulsarStep(3, 5);
+						drawPulsarStep(3, 6);
+						drawPulsarStep(4, 6);
+					}
+				}
+				cell.draw();
+			}
+
+			function drawLSpaceship() {
+				resetFill();
+				cell.alive[2][3] = 1;
+				cell.alive[2][4] = 1;
+				cell.alive[3][2] = 1;
+				cell.alive[3][3] = 1;
+				cell.alive[3][4] = 1;
+				cell.alive[4][2] = 1;
+				cell.alive[4][3] = 1;
+				cell.alive[4][5] = 1;
+				cell.alive[5][3] = 1;
+				cell.alive[5][4] = 1;
+				cell.alive[5][5] = 1;
+				cell.alive[6][4] = 1;
+				cell.draw();
+			}
+
+			document.getElementById("nxt").onclick=nextRunning;
+			document.getElementById("rnd").onclick=randomFill;
+			document.getElementById("rst").onclick=resetFill;;
+			document.getElementById("ctn").onclick=continueRunning;
+			document.getElementById("stp").onclick=stopRunning;
+			document.getElementById("bck").onclick=function(){
+				window.location.href='/'
+			}
+			document.getElementById("gld").onclick=drawGlider;
+			document.getElementById("pls").onclick=drawPulsar;
+			document.getElementById("lss").onclick=drawLSpaceship;
+
+			board_dom.onmousedown=function(ev) {
+				stopRunning();
+				var X = ev.offsetX;
+				var Y = ev.offsetY;
+				var rX = Math.floor(X / 10);
+				var rY = Math.floor(Y / 10);
+				if (rX > 0 && rY > 0 && rX < W - 1 && rY < W - 1) {
+					cell.alive[rX][rY] = 1-cell.alive[rX][rY];
+					cell.draw();
+				}
+			};
+
+		</script>
+</body></html>
+
+
