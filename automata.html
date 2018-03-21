@@ -138,7 +138,7 @@
 				cell.draw();
 			}
 
-			var mid = W / 2, dx, dy;
+			var mid = Math.floor(W / 2), dx, dy;
 			function drawPulsarStep(Px, Py) {
 				cell.alive[mid + Px * dx][mid + Py * dy] = 1;
 				cell.alive[mid + Py * dy][mid + Px * dx] = 1;
