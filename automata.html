@@ -7,7 +7,8 @@
 		<div style="overflow:hidden;width:100%;height:100%">
 			<div style="height:100px">
 				Options: <button id="nxt">Next</button><button id="rnd">Random Fill</button><button id="rst">Reset</button><button id="ctn" style="text-align:middle;width:100px;" disabled = false>Play</button><button id="stp" style="text-align:middle;width:100px;" disabled = true>Pause</button><button id="bck">Exit</button><br>
-				Patterns: <button id="gld">Glider</button><button id="pls">Pulsar</button><button id="lss">Light Spaceship</button><button id="glg">Glider Gun</button><br>
+				Space Ships: <button id="gld">Glider</button><button id="lss">Lightweighted Spaceship</button><button id="glg">Glider Gun</button><br>
+				Oscillators: <button id="pls">Pulsar [3]</button><button id="bbc">Big Bacon [8]</button><button id="ptd">Pentadecathlon [15]</button><br>
 				Click to flip a block
 			</div>
 			<div><canvas width="600px" height="600px" style="height:600px;width:600px" id="board"></canvas></div>
@@ -144,6 +145,9 @@
 			cell.alive[mid + Px * dx][mid + Py * dy] = 1;
 			cell.alive[mid + Py * dy][mid + Px * dx] = 1;
 			}
+			function drawMid(Px, Py) {
+			cell.alive[mid + Px][mid + Py] = 1;
+			}
 			function drawPulsar() {
 			resetFill();
 			for (dx = -1; dx <= 1; dx = dx + 2) {
@@ -159,6 +163,50 @@
 			drawPulsarStep(4, 6);
 			}
 			}
+			cell.draw();
+			}
+			function drawPenta() {
+			resetFill();
+			drawMid(-2, -3);
+			drawMid(-1, -3);
+			drawMid(0, -3);
+			drawMid(1, -3);
+			drawMid(2, -3);
+			drawMid(-1, -4);
+			drawMid(0, -4);
+			drawMid(1, -4);
+			drawMid(0, -5);
+			drawMid(-2, 4);
+			drawMid(-1, 4);
+			drawMid(0, 4);
+			drawMid(1, 4);
+			drawMid(2, 4);
+			drawMid(-1, 5);
+			drawMid(0, 5);
+			drawMid(1, 5);
+			drawMid(0, 6);
+			cell.draw();
+		}
+			function drawBBacon() {
+			resetFill();
+			drawMid(-1, 0);
+			drawMid(-2, 0);
+			drawMid(-3, 0);
+			drawMid(-1, -1);
+			drawMid(-2, -1);
+			drawMid(-3, -1);
+			drawMid(-1, -2);
+			drawMid(-2, -2);
+			drawMid(-3, -2);
+			drawMid(0, 1);
+			drawMid(0, 2);
+			drawMid(0, 3);
+			drawMid(1, 1);
+			drawMid(1, 2);
+			drawMid(1, 3);
+			drawMid(2, 1);
+			drawMid(2, 2);
+			drawMid(2, 3);
 			cell.draw();
 			}
 
@@ -239,6 +287,8 @@
 			}
 			document.getElementById("gld").onclick=drawGlider;
 			document.getElementById("pls").onclick=drawPulsar;
+			document.getElementById("ptd").onclick=drawPenta;
+			document.getElementById("bbc").onclick=drawBBacon;
 			document.getElementById("lss").onclick=drawLSpaceship;
 			document.getElementById("glg").onclick=drawGGun;
 
