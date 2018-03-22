@@ -30,13 +30,14 @@
 			cellObj.prototype.draw=function() {
 				for (var i = 0; i < W; i++) {
 					for (var j = 0; j < W; j++) {
-						if (this.alive[i][j] == 1) {
+						if (i == 0 || j == 0 || i == W - 1 || j == W - 1) {
+							board.fillStyle = "gray";
+							} else if (this.alive[i][j] == 1) {
 							board.fillStyle = "black";
-							board.fillRect (i * 10, j * 10, 10, 10);
 							} else {
 							board.fillStyle = "white";
-							board.fillRect (i * 10, j * 10, 10, 10);
 						}
+						board.fillRect (i * 10, j * 10, 10, 10);
 					}
 				}
 			}
@@ -99,133 +100,133 @@
 			}
 
 			function stopRunning() {
-				clearInterval(ctnRun);
-				document.getElementById("ctn").disabled=false;
-				document.getElementById("stp").disabled=true;
-				runningOn = 0;
+			clearInterval(ctnRun);
+			document.getElementById("ctn").disabled=false;
+			document.getElementById("stp").disabled=true;
+			runningOn = 0;
 			}
 			stopRunning();
 
 			function nextFrame() {
-				cell.nextStep();
-				cell.draw();
+			cell.nextStep();
+			cell.draw();
 			}
 
 			function nextRunning() {
-				stopRunning();
-				nextFrame();
+			stopRunning();
+			nextFrame();
 			}
 
 			function randomFill() {
-				stopRunning();
-				cell.initR();
-				cell.draw();
+			stopRunning();
+			cell.initR();
+			cell.draw();
 			}
 
 			function resetFill() {
-				stopRunning();
-				cell.initS();
-				cell.draw();
+			stopRunning();
+			cell.initS();
+			cell.draw();
 			}
 
 			function drawGlider() {
-				resetFill();
-				cell.alive[1][2] = 1;
-				cell.alive[2][3] = 1;
-				cell.alive[3][1] = 1;
-				cell.alive[3][2] = 1;
-				cell.alive[3][3] = 1;
-				cell.draw();
+			resetFill();
+			cell.alive[1][2] = 1;
+			cell.alive[2][3] = 1;
+			cell.alive[3][1] = 1;
+			cell.alive[3][2] = 1;
+			cell.alive[3][3] = 1;
+			cell.draw();
 			}
 
 			var mid = Math.floor(W / 2), dx, dy;
 			function drawPulsarStep(Px, Py) {
-				cell.alive[mid + Px * dx][mid + Py * dy] = 1;
-				cell.alive[mid + Py * dy][mid + Px * dx] = 1;
+			cell.alive[mid + Px * dx][mid + Py * dy] = 1;
+			cell.alive[mid + Py * dy][mid + Px * dx] = 1;
 			}
 			function drawPulsar() {
-				resetFill();
-				for (dx = -1; dx <= 1; dx = dx + 2) {
-					for (dy = -1; dy <= 1; dy = dy + 2){
-						drawPulsarStep(1, 2);
-						drawPulsarStep(1, 3);
-						drawPulsarStep(1, 4);
-						drawPulsarStep(2, 3);
-						drawPulsarStep(2, 5);
-						drawPulsarStep(3, 4);
-						drawPulsarStep(3, 5);
-						drawPulsarStep(3, 6);
-						drawPulsarStep(4, 6);
-					}
-				}
-				cell.draw();
+			resetFill();
+			for (dx = -1; dx <= 1; dx = dx + 2) {
+			for (dy = -1; dy <= 1; dy = dy + 2){
+			drawPulsarStep(1, 2);
+			drawPulsarStep(1, 3);
+			drawPulsarStep(1, 4);
+			drawPulsarStep(2, 3);
+			drawPulsarStep(2, 5);
+			drawPulsarStep(3, 4);
+			drawPulsarStep(3, 5);
+			drawPulsarStep(3, 6);
+			drawPulsarStep(4, 6);
+			}
+			}
+			cell.draw();
 			}
 
 			function drawLSpaceship() {
-				resetFill();
-				cell.alive[2][3] = 1;
-				cell.alive[2][4] = 1;
-				cell.alive[3][2] = 1;
-				cell.alive[3][3] = 1;
-				cell.alive[3][4] = 1;
-				cell.alive[4][2] = 1;
-				cell.alive[4][3] = 1;
-				cell.alive[4][5] = 1;
-				cell.alive[5][3] = 1;
-				cell.alive[5][4] = 1;
-				cell.alive[5][5] = 1;
-				cell.alive[6][4] = 1;
-				cell.draw();
+			resetFill();
+			cell.alive[2][3] = 1;
+			cell.alive[2][4] = 1;
+			cell.alive[3][2] = 1;
+			cell.alive[3][3] = 1;
+			cell.alive[3][4] = 1;
+			cell.alive[4][2] = 1;
+			cell.alive[4][3] = 1;
+			cell.alive[4][5] = 1;
+			cell.alive[5][3] = 1;
+			cell.alive[5][4] = 1;
+			cell.alive[5][5] = 1;
+			cell.alive[6][4] = 1;
+			cell.draw();
 			}
 
 			function drawGGun() {
-				resetFill();
-				cell.alive[3][8] = 1;
-				cell.alive[3][9] = 1;
-				cell.alive[4][8] = 1;
-				cell.alive[4][9] = 1;
-				cell.alive[14][5] = 1;
-				cell.alive[14][6] = 1;
-				cell.alive[14][10] = 1;
-				cell.alive[14][11] = 1;
-				cell.alive[16][6] = 1;
-				cell.alive[16][10] = 1;
-				cell.alive[17][7] = 1;
-				cell.alive[17][8] = 1;
-				cell.alive[17][9] = 1;
-				cell.alive[18][7] = 1;
-				cell.alive[18][8] = 1;
-				cell.alive[18][9] = 1;
-				cell.alive[24][6] = 1;
-				cell.alive[25][5] = 1;
-				cell.alive[25][6] = 1;
-				cell.alive[25][7] = 1;
-				cell.alive[26][5] = 1;
-				cell.alive[26][6] = 1;
-				cell.alive[26][7] = 1;
-				cell.alive[28][3] = 1;
-				cell.alive[28][4] = 1;
-				cell.alive[28][8] = 1;
-				cell.alive[28][9] = 1;
-				cell.alive[29][3] = 1;
-				cell.alive[29][4] = 1;
-				cell.alive[29][8] = 1;
-				cell.alive[29][9] = 1;
-				cell.alive[32][6] = 1;
-				cell.alive[33][5] = 1;
-				cell.alive[33][7] = 1;
-				cell.alive[34][4] = 1;
-				cell.alive[34][5] = 1;
-				cell.alive[35][4] = 1;
-				cell.alive[35][5] = 1;
-				cell.alive[36][4] = 1;
-				cell.alive[36][5] = 1;
-				cell.alive[36][6] = 1;
-				cell.alive[37][5] = 1;
-				cell.alive[37][7] = 1;
-				cell.alive[38][6] = 1;
-				cell.alive[38][7] = 1;
-				cell.draw();
+			resetFill();
+			cell.alive[3][8] = 1;
+			cell.alive[3][9] = 1;
+			cell.alive[4][8] = 1;
+			cell.alive[4][9] = 1;
+			cell.alive[14][5] = 1;
+			cell.alive[14][6] = 1;
+			cell.alive[14][10] = 1;
+			cell.alive[14][11] = 1;
+			cell.alive[16][6] = 1;
+			cell.alive[16][10] = 1;
+			cell.alive[17][7] = 1;
+			cell.alive[17][8] = 1;
+			cell.alive[17][9] = 1;
+			cell.alive[18][7] = 1;
+			cell.alive[18][8] = 1;
+			cell.alive[18][9] = 1;
+			cell.alive[24][6] = 1;
+			cell.alive[25][5] = 1;
+			cell.alive[25][6] = 1;
+			cell.alive[25][7] = 1;
+			cell.alive[26][5] = 1;
+			cell.alive[26][6] = 1;
+			cell.alive[26][7] = 1;
+			cell.alive[28][3] = 1;
+			cell.alive[28][4] = 1;
+			cell.alive[28][8] = 1;
+			cell.alive[28][9] = 1;
+			cell.alive[29][3] = 1;
+			cell.alive[29][4] = 1;
+			cell.alive[29][8] = 1;
+			cell.alive[29][9] = 1;
+			cell.alive[32][6] = 1;
+			cell.alive[33][5] = 1;
+			cell.alive[33][7] = 1;
+			cell.alive[34][4] = 1;
+			cell.alive[34][5] = 1;
+			cell.alive[35][4] = 1;
+			cell.alive[35][5] = 1;
+			cell.alive[36][4] = 1;
+			cell.alive[36][5] = 1;
+			cell.alive[36][6] = 1;
+			cell.alive[37][5] = 1;
+			cell.alive[37][7] = 1;
+			cell.alive[38][6] = 1;
+			cell.alive[38][7] = 1;
+			cell.draw();
 			}
 
 			document.getElementById("nxt").onclick=nextRunning;
@@ -234,7 +235,7 @@
 			document.getElementById("ctn").onclick=continueRunning;
 			document.getElementById("stp").onclick=stopRunning;
 			document.getElementById("bck").onclick=function(){
-				window.location.href='/'
+			window.location.href='/'
 			}
 			document.getElementById("gld").onclick=drawGlider;
 			document.getElementById("pls").onclick=drawPulsar;
@@ -242,14 +243,14 @@
 			document.getElementById("glg").onclick=drawGGun;
 
 			board_dom.onmousedown=function(ev) {
-				var X = ev.offsetX;
-				var Y = ev.offsetY;
-				var rX = Math.floor(X / 10);
-				var rY = Math.floor(Y / 10);
-				if (rX > 0 && rY > 0 && rX < W - 1 && rY < W - 1) {
-					cell.alive[rX][rY] = 1-cell.alive[rX][rY];
-					cell.draw();
-				}
+			var X = ev.offsetX;
+			var Y = ev.offsetY;
+			var rX = Math.floor(X / 10);
+			var rY = Math.floor(Y / 10);
+			if (rX > 0 && rY > 0 && rX < W - 1 && rY < W - 1) {
+			cell.alive[rX][rY] = 1-cell.alive[rX][rY];
+			cell.draw();
+			}
 			};
 
 		</script>
