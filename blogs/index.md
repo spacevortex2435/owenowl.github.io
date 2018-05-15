@@ -16,6 +16,8 @@
 
 爆零记：
 
+[CTSC/APIO 2018](CTSC-APIO.html)
+
 [SCOI 2018](SCOI.html)
 
 [THUWC 2018](THUWC.html)
