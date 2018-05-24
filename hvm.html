@@ -1,0 +1,214 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+    <title>Hack VM - A Virtual Machine for Hackers</title>
+	<style>
+textarea.textbox {
+    font-family: Monaco, "lucida console", Courier;
+    border: 1px solid #CCCCCC;
+    font-size: .60em; 
+    padding: 2px 4px;
+    margin-top: .3em;
+}
+
+input.textbox {
+    font-family: Monaco, "lucida console", Courier;
+    border: 1px solid #CCCCCC;
+    font-size: .60em; 
+    padding: 2px 4px;
+    margin-top: .3em;
+}
+
+#vm_area {
+    display: block;
+    border: 1px solid #CCCCCC;
+    padding: 2px 4px;
+    margin-top: .3em;
+    width: 600px;
+    height: 300px;
+    overflow: auto;
+}
+
+#vm_output {
+    display: inline;
+    font-family: Monaco, "lucida console", Courier;
+    font-size: .60em;
+}
+
+#vm_trace {
+    display: inline;
+    font-family: Monaco, "lucida console", Courier;
+    font-size: .60em;
+}
+
+#vm_output span {
+    white-space: -moz-pre-wrap; /* Mozilla */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    white-space: pre-wrap; /* CSS 2.1 */
+    white-space: pre-line; /* CSS 3 (and 2.1 as well, actually) */
+    word-wrap: break-word; /* IE */
+    wrap-option: emergency; /* CSS 3 */
+}
+
+input.textbox:focus { background-color: #FFFEE3; }
+
+.code { color: blue; }
+.data { color: black; }
+.error { color: red; }
+.banner { color: green; }
+.invisible { display: none; }
+	</style>
+</head>
+<body>
+<h1>Hack VM - A Virtual Machine for Hackers</h1>
+<h2>Instructions</h2>
+In the following descriptions, S&lt;n&gt; is the (n+1)th value from the top of the stack (S0 is at the top, then S1, S2, etc...)
+<table border="1">
+    <tr><th>Instruction</th><th>Description</th></tr>
+    <tr><td>' '</td><td>Do Nothing</td>
+    <tr><td>'p'</td><td>Print S0 interpreted as an integer</td>
+    <tr><td>'P'</td><td>Print S0 interpreted as an ASCII character (only the least significant 7 bits of the value are used)</td>
+    <tr><td>'0'</td><td>Push the value 0 on the stack</td>
+    <tr><td>'1'</td><td>Push the value 1 on the stack</td>
+    <tr><td>'2'</td><td>Push the value 2 on the stack</td>
+    <tr><td>'3'</td><td>Push the value 3 on the stack</td>
+    <tr><td>'4'</td><td>Push the value 4 on the stack</td>
+    <tr><td>'5'</td><td>Push the value 5 on the stack</td>
+    <tr><td>'6'</td><td>Push the value 6 on the stack</td>
+    <tr><td>'7'</td><td>Push the value 7 on the stack</td>
+    <tr><td>'8'</td><td>Push the value 8 on the stack</td>
+    <tr><td>'9'</td><td>Push the value 9 on the stack</td>
+    <tr><td>'+'</td><td>Push S1+S0</td>
+    <tr><td>'-'</td><td>Push S1-S0</td>
+    <tr><td>'*'</td><td>Push S1*S0</td>
+    <tr><td>'/'</td><td>Push S1/S0</td>
+    <tr><td>':'</td><td>Push -1 if S1&lt;S0, 0 if S1=S0, or 1 S1&gt;S0</td>
+    <tr><td>'g'</td><td>Add S0 to the program counter</td>
+    <tr><td>'?'</td><td>Add S0 to the program counter if S1 is 0</td>
+    <tr><td>'c'</td><td>Push the program counter on the call stack and set the program counter to S0</td>
+    <tr><td>'$'</td><td>Set the program counter to the value pop'ed from the call stack</td>
+    <tr><td>'<'</td><td>Push the value of memory cell S0</td>
+    <tr><td>'>'</td><td>Store S1 into memory cell S0</td>
+    <tr><td>'^'</td><td>Push a copy of S&lt;S0+1&gt; (ex: 0^ duplicates S0)</td>
+    <tr><td>'v'</td><td>Remove S&lt;S0+1&gt; from the stack and push it on top (ex: 1v swaps S0 and S1)</td>
+    <tr><td>'d'</td><td>Drop S0</td>
+    <tr><td>'!'</td><td>Terminate the program</td>
+</table>
+<h2>Examples</h2>
+<pre>Input: "78*p" Output: 56</pre>
+<pre>Input: "123451^2v5:4?9p2g8pppppp" Output: 945321</pre>
+<h2>Try it!</h2>
+<script type="text/javascript">
+var outputString = "";
+var output;
+var MAX_CYCLES  = 10000;
+var MEMORY_SIZE = 16384;
+var OperandStack;
+var CallStack;
+var ProgramCounter;
+var Code;
+var Memory = new Array(MEMORY_SIZE);
+function EmitOutput(txt) {
+    outputString += txt;
+    output.value = outputString;    
+}
+
+function Push(v) {
+    if (isNaN(v)) throw "illegal value";
+    if (v > 2147483647 || v < -2147483648) throw "integer overflow";
+    OperandStack.push(v);
+}
+
+function Pop() {
+    if (OperandStack.length == 0) throw "stack underflow";
+    return OperandStack.pop();
+}
+
+var Instructions = {
+    ' ': function() {},
+    '0': function() { Push(0) },
+    '1': function() { Push(1) },
+    '2': function() { Push(2) },
+    '3': function() { Push(3) },
+    '4': function() { Push(4) },
+    '5': function() { Push(5) },
+    '6': function() { Push(6) },
+    '7': function() { Push(7) },
+    '8': function() { Push(8) },
+    '9': function() { Push(9) },
+    '+': function() { Push(Pop()+Pop()) },
+    '-': function() { var a = Pop(); var b = Pop(); Push(b-a) },
+    '*': function() { Push(Pop()*Pop()) },
+    '/': function() { var a = Pop(); var b = Pop(); Push(Math.floor(b/a)) },
+    'p': function() { EmitOutput(Pop()) },
+    'P': function() { EmitOutput(String.fromCharCode(Pop()&0x7F)) },
+    ':': function() { var a = Pop(); var b = Pop(); if (b<a) Push(-1); else if (b==a) Push(0); else Push(1) },
+    'g': function() { ProgramCounter += Pop() },
+    '?': function() { var offset=Pop(); if (Pop() == 0) ProgramCounter += offset },
+    'c': function() { CallStack.push(ProgramCounter); ProgramCounter = Pop() },
+    '$': function() { if (CallStack.length == 0) throw "call stack underflow"; ProgramCounter = CallStack.pop() },
+    '<': function() { addr = Pop(); if (addr < 0 || addr >= Memory.length) throw 'memory read access violation @'+addr; Push(Memory[addr]) },
+    '>': function() { addr = Pop(); if (addr < 0 || addr >= Memory.length) throw 'memory write access violation @'+addr; Memory[addr] = Pop() },
+    '^': function() { var i = Pop(); Push(OperandStack[OperandStack.length-i-1])},
+    'v': function() { var i = Pop(); var v = OperandStack.splice(OperandStack.length-i-1,1); Push(v[0]) },
+    'd': function() { Pop(); },
+    '!': function() { ProgramCounter = Code.length }
+}
+
+function Run() {
+    output = document.getElementById("output");
+    output.value = "";
+    outputString = "";
+    Code = document.getElementById("code").value;
+    var trace = document.getElementById("trace").checked;
+    var traceOutput = document.getElementById("trace_output");
+    var traceBuffer = "";
+    
+    // init the state
+    ProgramCounter = 0;
+    CallStack = [];
+    OperandStack = [];
+    
+    // init the memory
+    for (var i=0; i<MEMORY_SIZE; i++) Memory[i] = 0;
+    var mem_init = document.getElementById("mem_init").value.split(/ *,+ */);
+    for (var i=0; i<mem_init.length; i++) {
+        Memory[i] = parseInt(mem_init[i]);
+    }
+    
+    // run loop    
+    var cycleCounter = 0;
+    try {
+        while (ProgramCounter != Code.length) {
+            var instruction = Code[ProgramCounter++];
+            if (cycleCounter++ > MAX_CYCLES) throw "too many cycles";
+            Instructions[instruction]();
+            if (trace && instruction != ' ') {
+                traceBuffer += instruction+' ['+OperandStack+']\n';
+            }
+            if (ProgramCounter <0 || ProgramCounter > Code.length) throw 'out of code bounds';
+        }
+    } catch (e) {
+        EmitOutput("!ERROR: "+e);
+    }
+	 traceOutput.value = traceBuffer;
+}
+
+function TraceBoxChanged() {
+    var textarea = document.getElementById('trace_output');
+    textarea.style.display = document.getElementById("trace").checked?'block':'none';    
+}
+</script>
+<form id="vm_form" autocomplete="off"> 
+  Enter values to initialize the memory cells. The format is: cell-0, cell-1, ...<br>
+  <textarea id="mem_init" name="mem_init_text" type="text" class="textbox" rows="3" cols="80"></textarea><br>
+  Enter your code here<br>
+  <textarea id="code" name="code_text" type="text" class="textbox" rows="4" cols="80"></textarea><br>
+  <input type="BUTTON" name="run" value="Run!" onclick="Run()"> Show Trace <input type="CHECKBOX" name="trace" id="trace" checked="true" onchange="TraceBoxChanged()"><br>
+  Output:<br>
+  <textarea id="output" name="output_text" type="text" class="textbox" rows="4" cols="80"></textarea><br>
+  Trace:<br>
+  <textarea id="trace_output" name="trace_output_text" type="text" class="textbox" rows="20" cols="40"></textarea><br>
+</form> 
+</body>
+</html>
