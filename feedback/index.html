@@ -1,0 +1,24 @@
+<html>
+<head>
+<title>Feedback</title>
+<script type="text/javascript">
+function refresh_()
+{
+  var a=document.getElementById("input");
+  document.getElementById("input").value="";
+  document.getElementById("output").innerHTML="Thanks to your feedback!";
+}
+// A fake feedback page
+</script>
+</head>
+<body>
+  <center><h1>Feedback -- Give Your Advice</h1>
+	<textarea id="input" name="in_text" type="text" class="textbox" rows="10" cols="100"></textarea><br>
+	<br/>
+  <button type="button" onclick="refresh_()" value="refresh">Submit</button>
+  <br/>
+  <a id="output"></a>
+  </center>
+</body>
+</html>
+
