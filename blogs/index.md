@@ -4,16 +4,6 @@
 
 [【JOI 2018】交互与通信题](JOI2018_communication.html)
 
-算法笔记：
-
-[Polya 定理的简单证明](Polya.html)
-
-[斯特林数基础](Sterling.html)
-
-[简单博弈问题](Gaming.html)
-
-[行列式基础](Determinant.html)
-
 爆零记：
 
 [NOI 2018](NOI18.html)
