@@ -1,5 +1,7 @@
 题解：
 
+[啖光之花加强版](poly2.html)
+
 [【2018 集训队互测 Day 4】小修和小栋玩♂游戏](mcfx.html)
 
 [【JOI 2018】交互与通信题](JOI2018_communication.html)
