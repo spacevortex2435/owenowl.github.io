@@ -1,19 +1,14 @@
-存一个多项式板子，写了**模**和**多点查值**了。
-
-用的是 FLOJ #266 的题。
-
-有时间再继续补。
-
 ```cpp
 #include <cstdio>
+#include <vector>
 #include <cstring>
 #include <algorithm>
 
 #define FIO ""
 #define fx first
 #define fy second
-#define pb push_back
 #define mpar std::make_pair
+#define pb push_back
 #define dbug(...) fprintf(stderr, __VA_ARGS__)
 
 typedef double db;
@@ -38,8 +33,8 @@ inline void FileIO(){freopen(FIO".in", "r", stdin); freopen(FIO".out", "w", stdo
 
 using namespace std;
 
-const ll mod = 1811939329;
-const ll g0 = 13;
+const ll mod = 998244353;
+const ll g0 = 3;
 const int N = 262150;
 int rnk[N];
 inline ll qpow(ll t, ll b) {
@@ -55,7 +50,7 @@ inline ll qpow(ll t, ll b) {
 typedef vector <ll> Poly;
 
 ll w[2][N];
-void NTTinit() {
+inline void NTTinit() {
   for (int i = 1; i < (1 << 18); i <<= 1) {
     ll wn = qpow(g0, (mod - 1) / (i << 1));
     for (int j = 0; j < i; j++) {
@@ -106,6 +101,15 @@ void Mul(const ll A[], int lenA, const ll B[], int lenB, ll C[], int lenC) {
   memset(F, 0, n << 3);
   memcpy(E, A, min(lenA, lenC) << 3);
   memcpy(F, B, min(lenB, lenC) << 3);
+  if (x <= 100) {
+    memset(C, 0, lenC << 3);
+    for (int i = 0; i < lenA; i++) {
+      for (int j = 0; j < lenB && j + i < lenC; j++) {
+        C[i + j] = (C[i + j] + E[i] * F[j]) % mod;
+      }
+    }
+    return;
+  }
   NTT(E, 1, n);
   NTT(F, 1, n);
   for (int i = 0; i < n; i++) {
@@ -140,6 +144,44 @@ void Inv(int n, const ll a[], ll C[]) {
   }
   NTT(C, -1, L);
 }
+void Ln(int n, const ll a[], ll C[]) {
+  static ll tmp[N], b[N];
+  for (int i = 1; i < n; i++) {
+    b[i - 1] = a[i] * i % mod;
+  }
+  Inv(n, a, tmp);
+  Mul(b, n - 1, tmp, n, tmp, n);
+  C[0] = 0;
+  for (size_t i = 1; i < n; i++) {
+    C[i] = tmp[i - 1] * qpow(i, mod - 2) % mod;
+  }
+}
+void Exp(int n, const ll a[], ll C[]) {
+  if (n == 1) {
+    C[0] = 1;
+    return;
+  }
+  int L = 1, m = (n + 1) >> 1;
+  while (L < n << 1) {
+    L <<= 1;
+  }
+  Exp(m, a, C);
+  static ll A[N], B[N];
+  memset(C + m, 0, (n - m) << 3);
+  Ln(n, C, B);
+  memcpy(A, a, n << 3);
+  memset(A + n, 0, (L - n) << 3);
+  memset(C + n, 0, (L - n) << 3);
+  for (int i = 0; i < n; i++) {
+    A[i] = (mod + A[i] + (!i) - B[i]) % mod;
+  }
+  NTT(A, 1, L);
+  NTT(C, 1, L);
+  for (int i = 0; i < L; i++) {
+    C[i] = A[i] * C[i] % mod;
+  }
+  NTT(C, -1, L);
+}
 void Div(const ll A[], int lenA, const ll B[], int lenB, ll C[], int &lenC) {
   static ll E[N], F[N], G[N];
   if (lenA < lenB) {
@@ -162,11 +204,24 @@ void upd(Poly &a) {
     a.pop_back();
   }
 }
+void fix(Poly &a, int n) {
+  while (a.size() > n) {
+    a.pop_back();
+  }
+  while (a.size() < n) {
+    a.pb(0);
+  }
+}
+void getm(Poly &a, int n) {
+  while (a.size() > n) {
+    a.pop_back();
+  }
+  upd(a);
+}
 
 Poly operator * (const Poly &a, const Poly &b) {
   Poly c(a.size() + b.size() - 1);
   Mul(a.data(), a.size(), b.data(), b.size(), c.data(), c.size());
-  upd(c);
   return c;
 }
 Poly operator + (const Poly &a, const Poly &b) {
@@ -174,7 +229,6 @@ Poly operator + (const Poly &a, const Poly &b) {
   for (size_t i = 0; i < max(a.size(), b.size()); i++) {
     c[i] = ((i < a.size() ? a[i] : 0) + (i < b.size() ? b[i] : 0)) % mod;
   }
-  upd(c);
   return c;
 }
 Poly operator - (const Poly &a, const Poly &b) {
@@ -182,7 +236,6 @@ Poly operator - (const Poly &a, const Poly &b) {
   for (size_t i = 0; i < max(a.size(), b.size()); i++) {
     c[i] = ((i < a.size() ? a[i] : 0) - (i < b.size() ? b[i] : 0) + mod) % mod;
   }
-  upd(c);
   return c;
 }
 Poly operator / (const Poly &a, const Poly &b) {
@@ -211,47 +264,28 @@ Poly Derivative(const Poly &a) {
   if (!b.size()) b.pb(0);
   return b;
 }
-
-Poly s[N << 2];
-ll ans[N];
-ll a[N];
-
-inline void Pre(int p, int l, int r) {
-  if (l == r) {
-    s[p] = Poly{mod - a[l], 1};
-    return;
-  }
-  int mid = (l + r) >> 1;
-  Pre(p << 1, l, mid);
-  Pre(p << 1 | 1, mid + 1, r);
-  s[p] = s[p << 1] * s[p << 1 | 1];
+Poly Inv(const Poly &a) {
+  static ll tmp[N];
+  Inv(a.size(), a.data(), tmp);
+  Poly c = Poly{tmp, tmp + a.size()};
+  return c;
+}
+Poly Ln(const Poly &a) {
+  static ll tmp[N];
+  Ln(a.size(), a.data(), tmp);
+  Poly c = Poly{tmp, tmp + a.size()};
+  return c;
+}
+Poly Exp(const Poly &a) {
+  static ll tmp[N];
+  Exp(a.size(), a.data(), tmp);
+  Poly c = Poly{tmp, tmp + a.size()};
+  return c;
 }
 
-inline void Solve(const Poly &f, int p, int l, int r) {
-  if (l == r) {
-    ans[l] = f[0];
-    return;
-  }
-  int mid = (l + r) >> 1;
-  Solve(f % s[p << 1], p << 1, l, mid);
-  Solve(f % s[p << 1 | 1], p << 1 | 1, mid + 1, r);
-}
-
-int n;
+int n, m;
 
 int main() {
   NTTinit();
-  n = read() + 1;
-  for (int i = 0; i < n; i++) {
-    a[i] = read();
-  }
-  Pre(1, 0, n - 1);
-  Poly f = Derivative(s[1]);
-  Solve(f, 1, 0, n - 1);
-  ans[n - 1] = (mod - ans[n - 1]) % mod;
-  for (int i = 0; i < n - 1; i++) {
-    printf("%lld ", ans[n - 1] * qpow(ans[i], mod - 2) % mod);
-  }
 }
 ```
-
