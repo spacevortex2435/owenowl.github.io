@@ -46,6 +46,14 @@ https://paste.ubuntu.com/p/rpKZtz4skz/
 https://paste.ubuntu.com/p/wmGJFWWPTd/
 ```
 
+### Day 1 C. Hello world!
+
+设一个 $M$， 对 $k > M$ 的操作，暴力修改暴力查询；对 $k \le M$ 的操作，重建 $M$ 棵树，查询时搞个 BIT，修改的时候暴力向上找，修改到 $1$ 了就并查集合并一下。
+
+```
+https://paste.ubuntu.com/p/vcwSJCgytT/
+```
+
 ### Day 2 A. 小 Y 和地铁
 
 考虑两个线段 $[l_1,r_1]$ 和 $[l_2,r_2](l_1<l_2)$，如果前者包含后者，则后者的端点方向不同造成 $1$ 的代价；如果交叉，则 $r_1$ 和 $l_2$ 的方向相同造成 $1$ 的代价。直接枚举是 $2^n$ 的。
