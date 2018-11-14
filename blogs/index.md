@@ -14,6 +14,8 @@
 
 爆零记：
 
+[NOIP 2018](NOIP2018.html)
+
 [NOI 2018](NOI18.html)
 
 [THUSC 2018](THUSC.html)
