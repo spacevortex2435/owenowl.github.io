@@ -1,6 +1,6 @@
 题解：
 
-[2017 欧洲五套区域赛](regional)
+[某些很水的 Gym](regional)
 
 [清华集训 2017 改题](thujx.html)
 
