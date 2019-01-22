@@ -14,6 +14,8 @@
 
 爆零记：
 
+[THUWC/WC 2019](WC2019.html)
+
 [NOIP 2018](NOIP2018.html)
 
 [NOI 2018](NOI18.html)
