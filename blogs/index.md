@@ -14,6 +14,8 @@
 
 爆零记：
 
+[SCOI 2019](SCOI2019.html)
+
 [THUWC/WC 2019](WC2019.html)
 
 [NOIP 2018](NOIP2018.html)
@@ -24,15 +26,13 @@
 
 [CTSC/APIO 2018](CTSC-APIO.html)
 
-[SCOI 2018](SCOI.html)
+[SCOI 2018](SCOI2018.html)
 
 [THUWC 2018](THUWC.html)
 
-[NOIP 2017](NOIP.html)
+[NOIP 2017](NOIP2017.html)
 
 笔记：
-
-[斯特林数](Sterling.html)
 
 [轨道计数](Polya.html)
 
