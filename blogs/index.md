@@ -14,6 +14,8 @@
 
 爆零记：
 
+[NOI 2019](NOI19.html)
+
 [CTS/APIO 2019](CTSC-APIO2019.html)
 
 [SCOI 2019](SCOI2019.html)
