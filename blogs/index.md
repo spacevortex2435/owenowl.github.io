@@ -1,18 +1,6 @@
-题解：
-
-[某些很水的 Gym](regional)
-
-[清华集训 2017 改题](thujx.html)
-
-[BZOJ 3864 大朋友与多叉树](BZOJ3864.html)
-
-[啖光之花加强版](poly2.html)
-
-[2018 集训队互测 小修和小栋玩游戏](mcfx.html)
-
-[JOI 2018 交互题](JOI2018_communication.html)
-
 爆零记：
+
+[4th Metropolis](IOM2019.html)
 
 [NOI 2019](NOI19.html)
 
@@ -35,6 +23,20 @@
 [THUWC 2018](THUWC.html)
 
 [NOIP 2017](NOIP2017.html)
+
+题解：
+
+[某些很水的 Gym](regional)
+
+[清华集训 2017 改题](thujx.html)
+
+[BZOJ 3864 大朋友与多叉树](BZOJ3864.html)
+
+[啖光之花加强版](poly2.html)
+
+[2018 集训队互测 小修和小栋玩游戏](mcfx.html)
+
+[JOI 2018 交互题](JOI2018_communication.html)
 
 笔记：
 
