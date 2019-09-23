@@ -36,8 +36,6 @@
 
 [2018 集训队互测 小修和小栋玩游戏](mcfx.html)
 
-[JOI 2018 交互题](JOI2018_communication.html)
-
 笔记：
 
 [轨道计数](Polya.html)
