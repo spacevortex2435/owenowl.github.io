@@ -1,5 +1,7 @@
 爆零记：
 
+[北大集训 2019](PKU2019.html)
+
 [4th Metropolis](IOM2019.html)
 
 [NOI 2019](NOI19.html)
@@ -33,11 +35,3 @@
 [BZOJ 3864 大朋友与多叉树](BZOJ3864.html)
 
 [啖光之花加强版](poly2.html)
-
-[2018 集训队互测 小修和小栋玩游戏](mcfx.html)
-
-笔记：
-
-[轨道计数](Polya.html)
-
-[NTT 板子](NTT.html)
